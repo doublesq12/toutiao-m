@@ -52,7 +52,7 @@
       </div>
     </van-form>
     <h1>{{ $store.state.number }}</h1>
-    <button @click="increment">自增</button>
+    <!-- <button @click="increment">自增</button> -->
   </div>
 </template>
 

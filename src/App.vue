@@ -5,12 +5,12 @@
 </template>
 
 <script>
-import request from '@/utils/request'
-export default {
-  created() {
-    console.dir(request)
-  }
-}
+// import request from '@/utils/request'
+// export default {
+//   created() {
+//     console.dir(request)
+//   }
+// }
 </script>
 
 <style></style>

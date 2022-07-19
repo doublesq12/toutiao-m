@@ -6,6 +6,8 @@ import '@/assets/font/iconfont.css'
 import Vant from 'vant'
 import 'vant/lib/index.css'
 import 'amfe-flexible/index.min.js'
+// import dayjs from 'dayjs'
+// console.log(dayjs().format('YYYY/MM/DD HH:mm:ss'))
 
 Vue.use(Vant)
 
