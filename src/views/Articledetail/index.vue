@@ -106,14 +106,15 @@
       />
     </div>
     <!-- 评论 -->
-    <!-- 评论列表 -->
+    <!-- 文章评论列表 -->
     <commentList
       v-for="(item, index) in commentList"
       :key="index"
       :item="item"
       @replyButtonFn="showReplyPopupFn"
+      @likesOfTheArticleCommentList="likesOfTheArticleCommentListFn"
     ></commentList>
-    <!-- 回复弹出层 -->
+    <!-- 评论回复弹出层 -->
     <div class="replyPopup">
       <van-popup
         v-model="showReply"
@@ -129,13 +130,17 @@
           left-arrow
           @click-left="showReply = false"
         />
-        <commentList :item="item"></commentList>
+        <commentList
+          :item="isitem"
+          @likesOfTheArticleCommentList="likesOfTheArticleCommentListFn"
+        ></commentList>
         <div class="replyAll">全部回复</div>
-        <!-- 评论回复列表 -->
+        <!-- 评论的评论评论回复列表 -->
         <commentList
           v-for="(item, index) in commentReplyList"
           :key="index"
           :item="item"
+          @likesOfTheArticleCommentList="likesOfTheArticleCommentListFn"
         ></commentList>
         <!-- 回复弹出层底部评论 -->
         <van-cell @click="showReplyPopupFooterFn">
@@ -190,10 +195,14 @@ import {
   // 对文章点赞
   likeTheArticle,
   // 取消对文章点赞
-  cancelLikingTheArticle
+  cancelLikingTheArticle,
+  // 评论——对评论或评论回复点赞
+  likeCommentsOrReplyToComments,
+  // 评论——取消对评论或评论回复点赞
+  cancelTheCommentOrReplyToTheCommentLike
 } from '@/api'
 import dayjs from '@/utils/dayjs'
-import commentList from './components/commentList.vue'
+import commentList from './component/commentList.vue'
 export default {
   data() {
     return {
@@ -232,7 +241,7 @@ export default {
         ]
       ],
       // 控制回复弹出层对应的评论渲染内容
-      item: {}
+      isitem: {}
     }
   },
   components: {
@@ -357,7 +366,7 @@ export default {
     /// 回复评论弹出层的显示事件
     showReplyPopupFn(item) {
       this.showReply = true
-      this.item = item
+      this.isitem = item
       this.getCommentReplies()
     },
     // 回复弹出层的隐藏事件
@@ -387,19 +396,22 @@ export default {
       try {
         const { data } = await getCommentsOrCommentReplies(
           'c',
-          this.item.com_id
+          this.isitem.com_id
         )
         this.commentReplyList = data.data.results
+        console.log(this.commentReplyList)
       } catch (error) {
         console.log(error)
       }
     },
     // 发布评论的回复
     async commentReplyFn() {
+      console.log(this.isitem.com_id)
+      console.log(111)
       try {
         // 对评论进行评论接口
         await commentOnComments(
-          this.item.com_id,
+          this.isitem.com_id,
           this.messages,
           this.ariticleDetailList.art_id
         )
@@ -407,6 +419,24 @@ export default {
         this.messages = '' // 清空输入框
         this.getCommentReplies()
         // this.commentList.unshift(data.data.new_obj)
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    // 文章评论列表点赞、取消对文章点赞的点击事件
+    async likesOfTheArticleCommentListFn(i) {
+      try {
+        if (!i.is_liking) {
+          // 评论——对评论或评论回复点赞接口
+          await likeCommentsOrReplyToComments(i.com_id)
+          i.is_liking = true
+          i.like_count += 1
+        } else {
+          // 评论——取消对评论或评论回复点赞接口
+          await cancelTheCommentOrReplyToTheCommentLike(i.com_id)
+          i.is_liking = false
+          i.like_count -= 1
+        }
       } catch (error) {
         console.log(error)
       }

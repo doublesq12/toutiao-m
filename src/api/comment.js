@@ -43,3 +43,10 @@ export const likeCommentsOrReplyToComments = (target) => {
     }
   })
 }
+// 评论——取消对评论或评论回复点赞
+export const cancelTheCommentOrReplyToTheCommentLike = (target) => {
+  return request({
+    url: `/v1_0/comment/likings/${target}`,
+    method: 'DELETE'
+  })
+}

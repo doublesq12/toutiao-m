@@ -14,8 +14,12 @@
         <div class="top">
           <p class="number">{{ item.aut_name }}</p>
           <div class="like">
-            <van-icon name="good-job-o" />
-            <span>{{ item.like_count===0?'赞':item.like_count}}</span>
+            <van-icon
+              :name="item.is_liking ? 'good-job' : 'good-job-o'"
+              :color="item.is_liking ? 'red' : '#000'"
+              @click="likesOfTheArticleCommentListFn"
+            />
+            <span>{{ item.like_count === 0 ? '赞' : item.like_count }}</span>
           </div>
         </div>
         <div class="middle">{{ item.content }}</div>
@@ -47,7 +51,13 @@ export default {
   methods: {
     // 回复按钮点击事件
     clickTheReplyButtonFn() {
+      // console.log(this.item)
       this.$emit('replyButtonFn', this.item)
+    },
+    // 文章评论列表的点赞事件
+    likesOfTheArticleCommentListFn() {
+      // console.log(this.item)
+      this.$emit('likesOfTheArticleCommentList', this.item)
     }
   }
 }
@@ -63,13 +73,13 @@ export default {
     padding: 0.26667rem 0;
   }
   .left-img {
-    padding-left: 40px;
+    padding-left: 10px;
   }
   .right-content {
     flex: 1;
     margin-left: 20px;
     align-items: flex-start;
-    padding-right: 50px;
+    padding-right: 10px;
   }
   .top {
     display: flex;
@@ -79,11 +89,13 @@ export default {
       color: #406599;
       font-size: 0.34667rem;
     }
-    .van-icon-good-job-o {
+    .van-icon[data-v-09eba30e] {
       font-size: 0.4rem;
       margin-right: 10px;
     }
     .like {
+      width: 70px;
+      height: 20px;
       line-height: 0.4rem;
       .van-icon {
         margin-bottom: 10px;
@@ -105,12 +117,17 @@ export default {
   }
   .bottom {
     .van-button--round {
+      white-space: nowrap;
       width: 1.8rem;
       height: 0.64rem;
       line-height: 0.64rem;
       font-size: 0.28rem;
       color: #222;
     }
+  }
+  .van-icon[data-v-09eba30e] {
+    font-size: 0.4rem;
+    margin-right: 10px;
   }
 }
 </style>
