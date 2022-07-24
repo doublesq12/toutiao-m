@@ -4,7 +4,7 @@
     <header>
       <!-- 登录的头部盒子 -->
       <div v-if="isLogin" class="user-info banner">
-        <van-row>1</van-row>
+        <van-row></van-row>
         <van-row class="row-2">
           <van-col span="12">
             <van-row type="flex" align="center" justify="space-around">

@@ -9,10 +9,11 @@ export const getSearchSuggestion = (q) => {
   })
 }
 // 搜索——获取搜索结果
-export const getSearchResult = (q) => {
+export const getSearchResult = (page, q) => {
   return request({
     url: '/v1_0/search',
     params: {
+      page,
       q
     }
   })

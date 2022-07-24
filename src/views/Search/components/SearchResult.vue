@@ -1,13 +1,19 @@
 <template>
   <div>
     <!-- 搜索结果列表 -->
-    <van-cell-group>
+    <van-list
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      @load="onLoad"
+      offset="0"
+    >
       <van-cell
         :title="item.title"
         v-for="(item, index) in suggestionsList"
         :key="index"
       />
-    </van-cell-group>
+    </van-list>
   </div>
 </template>
 
@@ -21,11 +27,16 @@ export default {
     suggestionsList: {
       type: Array,
       required: true
+    },
+    finished: {
+      type: String,
+      required: true
     }
   },
   data() {
     return {
-      value: this.keywords
+      value: this.keywords,
+      loading: false
     }
   },
   methods: {
@@ -34,6 +45,10 @@ export default {
     },
     onCancel() {
       this.$toast('取消')
+    },
+    onLoad() {
+      this.$emit('loadNextPage')
+      this.loading = false
     }
   }
 }

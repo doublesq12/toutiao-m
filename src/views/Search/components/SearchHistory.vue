@@ -8,7 +8,12 @@
       </div>
       <i class="toutiao toutiao-shanchu" @click="delFn" v-else></i>
     </div>
-    <div class="history" v-for="(item, index) in historyList" :key="index">
+    <div
+      class="history"
+      v-for="(item, index) in historyList"
+      :key="index"
+      @click="goSearchResultPage(item)"
+    >
       {{ item }}
       <!-- 删除按钮 -->
       <van-icon name="close" v-if="isShowDelButton" @click="delOneFn(index)" />
@@ -44,6 +49,9 @@ export default {
     },
     delOneFn(index) {
       this.$emit('delOne', index)
+    },
+    goSearchResultPage(ele) {
+      this.$emit('goSearchResultPage', ele)
     }
   }
 }

@@ -1,7 +1,7 @@
 <template>
   <div class="searchPage">
     <!-- 头部搜索框 -->
-    <form action="/">
+    <form action="/" class="form">
       <van-search
         v-model="keywords"
         show-action
@@ -24,6 +24,9 @@
       :suggestionsList="suggestions"
       @empty="emptyFn"
       @delOne="delOneFn"
+      @loadNextPage="loadNextPageFn"
+      :finished="finished"
+      @goSearchResultPage="goSearchResultPageFn"
     ></component>
   </div>
 </template>
@@ -40,7 +43,9 @@ export default {
       isShowSearchResult: false,
       historyList:
         JSON.parse(localStorage.getItem('HEIMA_TOUTIAO_SEARCHHISTORY')) || [],
-      suggestions: []
+      suggestions: [],
+      page: 1,
+      finished: null
     }
   },
   components: {
@@ -63,12 +68,20 @@ export default {
     onSearch() {
       // console.log('正在搜索')
       this.isShowSearchResult = true
-      // 搜索历史
-      this.historyList.push(this.keywords)
-      localStorage.setItem(
-        'HEIMA_TOUTIAO_SEARCHHISTORY',
-        JSON.stringify(this.historyList)
-      )
+      const kindex = this.historyList.indexOf(this.keywords)
+      // 搜索历史,空、空格、去重处理
+      if (this.keywords.trim() === '') {
+        return
+      } else if (this.keywords.trim() !== '' && kindex === -1) {
+        this.historyList.unshift(this.keywords)
+        localStorage.setItem(
+          'HEIMA_TOUTIAO_SEARCHHISTORY',
+          JSON.stringify(this.historyList)
+        )
+      } else {
+        this.historyList.splice(kindex, 1)
+        this.historyList.unshift(this.keywords)
+      }
       // console.log(this.historyList)
       this.getSearchResult()
     },
@@ -80,7 +93,7 @@ export default {
     },
     async getSearchResult() {
       try {
-        const res = await getSearchResult(this.keywords)
+        const res = await getSearchResult(this.page, this.keywords)
         console.log(res)
         console.log(res.data.data.results)
         // if (res.data.data.options.length === 0) {
@@ -107,15 +120,39 @@ export default {
         'HEIMA_TOUTIAO_SEARCHHISTORY',
         JSON.stringify(this.historyList)
       )
+    },
+    async loadNextPageFn() {
+      this.page++
+      const { data } = await getSearchResult(this.page, this.keywords)
+      console.log(data)
+      if (data.data.results.length === 0) {
+        this.finished = true
+      }
+      this.suggestions.push(...data.data.results)
+    },
+    goSearchResultPageFn(ele) {
+      this.keywords = ele
+      this.onSearch()
     }
   }
 }
 </script>
 
 <style scoped lang="less">
+.form {
+  position: fixed;
+  top: 0;
+  z-index: 99;
+  left: 0;
+  right: 0;
+  width: 750px;
+}
 .search {
   [role='button'] {
     color: #fff;
   }
+}
+.SearchHistoryPage {
+  padding-top: 108px;
 }
 </style>

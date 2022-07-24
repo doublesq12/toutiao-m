@@ -21,3 +21,20 @@ export const getUserInfo = () => {
     // }
   })
 }
+// 用户——关注用户
+export const followUsers = (target) => {
+  return request({
+    url: '/v1_0/user/followings',
+    method: 'POST',
+    data: {
+      target
+    }
+  })
+}
+// 用户——取消关注用户
+export const cancelFollowingUsers = (target) => {
+  return request({
+    url: `/v1_0/user/followings/${target}`,
+    method: 'DELETE'
+  })
+}
