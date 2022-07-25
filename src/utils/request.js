@@ -1,8 +1,8 @@
 import axios from 'axios'
 import store from '@/store'
 const request = axios.create({
-  baseURL: 'http://toutiao.itheima.net',
-  timeout: 3000
+  baseURL: 'http://toutiao.itheima.net'
+  // timeout: 3000
 })
 request.interceptors.request.use(
   (config) => {

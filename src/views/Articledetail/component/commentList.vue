@@ -94,7 +94,7 @@ export default {
       margin-right: 10px;
     }
     .like {
-      width: 70px;
+      width: 80px;
       height: 20px;
       line-height: 0.4rem;
       .van-icon {

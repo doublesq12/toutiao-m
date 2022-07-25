@@ -13,6 +13,7 @@ export const sendCode = (mobile) => {
     url: `/v1_0/sms/codes/${mobile}`
   })
 }
+// 用户——获取用户自己信息
 export const getUserInfo = () => {
   return request({
     url: '/v1_0/user'
@@ -36,5 +37,27 @@ export const cancelFollowingUsers = (target) => {
   return request({
     url: `/v1_0/user/followings/${target}`,
     method: 'DELETE'
+  })
+}
+// 用户——编辑用户个人资料
+export const editUserProfile = (data) => {
+  return request({
+    url: '/v1_0/user/profile',
+    method: 'PATCH',
+    data
+  })
+}
+// 图片的FORM DATA
+export const uploadPhoto = (file) => {
+  return request({
+    url: '/v1_0/user/photo',
+    method: 'PATCH',
+    data: file
+  })
+}
+// 用户——获取用户个人资料
+export const getUserProfile = (file) => {
+  return request({
+    url: '/v1_0/user/profile'
   })
 }

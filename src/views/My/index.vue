@@ -83,6 +83,7 @@
 </template>
 
 <script>
+// 引入用户——获取用户自己信息接口
 import { getUserInfo } from '@/api'
 export default {
   name: 'My',
@@ -179,6 +180,12 @@ export default {
     :deep(.van-grid-item__content) {
       background-color: unset;
     }
+    :deep(.van-grid-item__icon-wrapper) {
+      font-size: 0.34667rem;
+    }
+  }
+  :deep(.code-btn[data-v-f7eea52e]) {
+    width: 1.8rem;
   }
   .van-grid-item {
     color: #fff;
