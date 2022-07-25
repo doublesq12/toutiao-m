@@ -107,13 +107,22 @@
     </div>
     <!-- 评论 -->
     <!-- 文章评论列表 -->
-    <commentList
-      v-for="(item, index) in commentList"
-      :key="index"
-      :item="item"
-      @replyButtonFn="showReplyPopupFn"
-      @likesOfTheArticleCommentList="likesOfTheArticleCommentListFn"
-    ></commentList>
+    <van-list
+      v-model="loading"
+      :finished="finished"
+      finished-text="没有更多了"
+      @load="onLoad"
+      offset="0"
+      :immediate-check="false"
+    >
+      <commentList
+        v-for="(item, index) in commentList"
+        :key="index"
+        :item="item"
+        @replyButtonFn="showReplyPopupFn"
+        @likesOfTheArticleCommentList="likesOfTheArticleCommentListFn"
+      ></commentList>
+    </van-list>
     <!-- 评论回复弹出层 -->
     <div class="replyPopup">
       <van-popup
@@ -241,7 +250,9 @@ export default {
         ]
       ],
       // 控制回复弹出层对应的评论渲染内容
-      isitem: {}
+      isitem: {},
+      loading: false,
+      finished: null
     }
   },
   components: {
@@ -440,6 +451,23 @@ export default {
       } catch (error) {
         console.log(error)
       }
+    },
+    // 评论列表加载事件
+    async onLoad() {
+      console.log(11)
+      console.log(this.commentList)
+      const { data } = await getCommentsOrCommentReplies(
+        'a',
+        this.ariticleDetailList.art_id,
+        this.commentList[this.commentList.length - 1].com_id
+      )
+      // console.log(data.data.results)
+      if (data.data.results.length === 0) {
+        this.finished = true
+      }
+      this.commentList.push(...data.data.results)
+      console.log(data)
+      this.loading = false
     }
   },
   created() {
